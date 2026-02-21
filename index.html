@@ -3,105 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM Visas Colombia - Pro</title>
+    <title>CRM Visas Colombia - Seguro</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; padding: 15px; color: #333; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; padding: 15px; color: #333; margin: 0; }
         .container { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
         h1, h2 { color: #1a73e8; margin-bottom: 20px; }
         
+        /* ESTILOS DEL LOGIN */
+        .login-box { max-width: 400px; margin: 100px auto; text-align: center; }
+        .login-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; }
+        .btn-login { background: #1a73e8; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-logout { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; float: right; }
+
+        /* Estilos generales del CRM */
         .grid-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .field { display: flex; flex-direction: column; }
         label { font-size: 0.8rem; margin-bottom: 4px; font-weight: 600; color: #666; }
         input, select { padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; }
-        input:focus { border-color: #1a73e8; outline: none; box-shadow: 0 0 0 2px rgba(26,115,232,0.2); }
-
         .tabla-container { overflow-x: auto; margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
         th { background: #f8f9fa; color: #555; }
         .link-cliente { color: #1a73e8; cursor: pointer; text-decoration: underline; font-weight: bold; }
-        
         .ficha-box { background: #fff; border: 2px solid #1a73e8; padding: 20px; border-radius: 8px; margin-top: 15px; }
         .ficha-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
         .info-card { padding: 10px; border-bottom: 1px solid #f0f0f0; }
         .info-card strong { display: block; font-size: 0.75rem; color: #888; text-transform: uppercase; }
-        
-        .btn-add { background: #1a73e8; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        .btn-add { background: #1a73e8; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; }
         .btn-back { background: #5f6368; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-bottom: 15px; }
         .btn-pdf { background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; float: right; }
         .btn-accion { border: none; background: none; cursor: pointer; font-size: 18px; margin-right: 5px; }
-        
         .badge { padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: bold; background: #e8f0fe; color: #1976d2; }
         .ocultar { display: none !important; }
     </style>
 </head>
 <body>
 
-<div id="panelAdmin" class="container">
-    <h1>🚀 CRM Visas Colombia</h1>
-    
-    <h2 id="tituloFormulario">1. Registro de Cliente</h2>
-    <div class="grid-form">
-        <div class="field"><label>Primer Nombre</label><input type="text" id="n1"></div>
-        <div class="field"><label>Segundo Nombre</label><input type="text" id="n2"></div>
-        <div class="field"><label>Primer Apellido</label><input type="text" id="a1"></div>
-        <div class="field"><label>Segundo Apellido</label><input type="text" id="a2"></div>
-        <div class="field"><label>Nacionalidad</label>
-            <select id="nacionalidad">
-                <option value="Colombia">Colombia</option>
-                <option value="Venezuela">Venezuela</option>
-                <option value="España">España</option>
-                <option value="México">México</option>
-                <option value="Otro">Otro</option>
-            </select>
-        </div>
-        <div class="field"><label>Fecha Nacimiento</label><input type="date" id="fechaNac"></div>
-        <div class="field"><label>Pasaporte</label><input type="text" id="pasaporte"></div>
-        <div class="field"><label>Email</label><input type="email" id="email"></div>
-        <div class="field"><label>Teléfono</label><input type="tel" id="tel"></div>
-    </div>
-    <button class="btn-add" id="btnGuardar" onclick="guardarCliente()">Guardar y Registrar</button>
-    <button class="btn-back ocultar" id="btnCancelarEdicion" onclick="cancelarEdicion()" style="width: 100%; margin-top: 10px; background: #dc3545;">Cancelar Edición</button>
-
-    <h2 style="margin-top:40px;">2. Clientes en Sistema</h2>
-    <div class="tabla-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre Cliente (Ver Ficha)</th>
-                    <th>Pasaporte</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="cuerpoTabla"></tbody>
-        </table>
-    </div>
+<div id="pantallaLogin" class="container login-box">
+    <h1>🔐 Acceso Seguro</h1>
+    <p>CRM Visas Colombia</p>
+    <input type="email" id="emailLogin" class="login-input" placeholder="Correo electrónico">
+    <input type="password" id="passLogin" class="login-input" placeholder="Contraseña">
+    <button class="btn-login" onclick="iniciarSesion()">Ingresar</button>
+    <p id="mensajeError" style="color: red; font-size: 0.9em; margin-top: 10px;"></p>
 </div>
 
-<div id="panelFicha" class="container ocultar">
-    <button class="btn-back" onclick="volverAlPanel()">← Volver al Listado</button>
-    <button class="btn-pdf" onclick="descargarPDF()">📄 Descargar PDF</button>
+<div id="pantallaApp" class="ocultar">
     
-    <div style="clear: both;"></div>
-
-    <div class="ficha-box" id="zonaImpresion">
-        <h2 style="border-bottom: 2px solid #1a73e8; padding-bottom: 10px;">Ficha Técnica del Trámite</h2>
-        <div class="ficha-grid" id="datosFicha">
+    <div id="panelAdmin" class="container">
+        <button class="btn-logout" onclick="cerrarSesion()">Salir 🚪</button>
+        <h1>🚀 CRM Visas Colombia</h1>
+        
+        <h2 id="tituloFormulario">1. Registro de Cliente</h2>
+        <div class="grid-form">
+            <div class="field"><label>Primer Nombre</label><input type="text" id="n1"></div>
+            <div class="field"><label>Segundo Nombre</label><input type="text" id="n2"></div>
+            <div class="field"><label>Primer Apellido</label><input type="text" id="a1"></div>
+            <div class="field"><label>Segundo Apellido</label><input type="text" id="a2"></div>
+            <div class="field"><label>Nacionalidad</label>
+                <select id="nacionalidad">
+                    <option value="Colombia">Colombia</option>
+                    <option value="Venezuela">Venezuela</option>
+                    <option value="España">España</option>
+                    <option value="México">México</option>
+                    <option value="Otro">Otro</option>
+                </select>
             </div>
+            <div class="field"><label>Fecha Nacimiento</label><input type="date" id="fechaNac"></div>
+            <div class="field"><label>Pasaporte</label><input type="text" id="pasaporte"></div>
+            <div class="field"><label>Email</label><input type="email" id="email"></div>
+            <div class="field"><label>Teléfono</label><input type="tel" id="tel"></div>
+        </div>
+        <button class="btn-add" id="btnGuardar" onclick="guardarCliente()">Guardar y Registrar</button>
+        <button class="btn-back ocultar" id="btnCancelarEdicion" onclick="cancelarEdicion()" style="width: 100%; margin-top: 10px; background: #dc3545;">Cancelar Edición</button>
+
+        <h2 style="margin-top:40px;">2. Clientes en Sistema</h2>
+        <div class="tabla-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre Cliente (Ver Ficha)</th>
+                        <th>Pasaporte</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpoTabla"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="panelFicha" class="container ocultar" style="margin-top: 20px;">
+        <button class="btn-back" onclick="volverAlPanel()">← Volver al Listado</button>
+        <button class="btn-pdf" onclick="descargarPDF()">📄 Descargar PDF</button>
+        <div style="clear: both;"></div>
+        <div class="ficha-box" id="zonaImpresion">
+            <h2 style="border-bottom: 2px solid #1a73e8; padding-bottom: 10px;">Ficha Técnica del Trámite</h2>
+            <div class="ficha-grid" id="datosFicha"></div>
+        </div>
     </div>
 </div>
 
 <script type="module">
-    // 1. Importar herramientas de Firebase
+    // Importamos Base de Datos Y Autenticación
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot } 
-    from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
-    // 2. Tus Llaves de Acceso (Pegadas exactamente como las enviaste)
     const firebaseConfig = {
         apiKey: "AIzaSyCS-gcU4XPVEvEKZ3-ZZHPws7mKFgmF1fE",
         authDomain: "crm-visas-colombia.firebaseapp.com",
@@ -111,25 +122,58 @@
         appId: "1:561306231655:web:5332e2802513f7a6e105c2"
     };
 
-    // 3. Inicializar Firebase y la Base de Datos
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app); // Iniciamos el motor de seguridad
 
     let clientes = [];
     let nombreArchivoActual = "Cliente";
     let idEditando = null;
 
-    // 4. MAGIA EN TIEMPO REAL: Escuchar cambios en la base de datos "clientes"
-    onSnapshot(collection(db, "clientes"), (snapshot) => {
-        clientes = [];
-        snapshot.forEach((documento) => {
-            // Unimos el ID que crea Firebase con los datos del formulario
-            clientes.push({ id: documento.id, ...documento.data() });
-        });
-        actualizarTabla(); // Dibuja la tabla cada vez que alguien guarde algo en la nube
+    // --- SISTEMA DE LOGIN Y SEGURIDAD ---
+
+    // Escuchador constante: Revisa si hay alguien logueado o no
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // Usuario correcto: Ocultar login, mostrar app y cargar datos
+            document.getElementById('pantallaLogin').classList.add('ocultar');
+            document.getElementById('pantallaApp').classList.remove('ocultar');
+            cargarDatos();
+        } else {
+            // No hay usuario: Mostrar login, ocultar app
+            document.getElementById('pantallaLogin').classList.remove('ocultar');
+            document.getElementById('pantallaApp').classList.add('ocultar');
+        }
     });
 
-    // --- FUNCIONES EXPORTADAS PARA QUE EL HTML LAS PUEDA USAR ---
+    window.iniciarSesion = async function() {
+        const email = document.getElementById('emailLogin').value;
+        const pass = document.getElementById('passLogin').value;
+        const mensaje = document.getElementById('mensajeError');
+        
+        try {
+            await signInWithEmailAndPassword(auth, email, pass);
+            mensaje.innerText = "";
+        } catch (error) {
+            mensaje.innerText = "Usuario o contraseña incorrectos.";
+            console.error(error);
+        }
+    };
+
+    window.cerrarSesion = function() {
+        signOut(auth);
+    };
+
+    // --- LÓGICA DEL CRM (Solo se ejecuta si el login fue exitoso) ---
+    function cargarDatos() {
+        onSnapshot(collection(db, "clientes"), (snapshot) => {
+            clientes = [];
+            snapshot.forEach((documento) => {
+                clientes.push({ id: documento.id, ...documento.data() });
+            });
+            actualizarTabla();
+        });
+    }
 
     window.guardarCliente = async function() {
         const inputN1 = document.getElementById('n1').value;
@@ -139,36 +183,25 @@
         if(!inputN1 || !inputA1 || !inputPas) return alert("Rellene al menos: Primer Nombre, Apellido y Pasaporte.");
 
         const datosCliente = {
-            n1: inputN1, 
-            n2: document.getElementById('n2').value,
-            a1: inputA1, 
-            a2: document.getElementById('a2').value,
+            n1: inputN1, n2: document.getElementById('n2').value,
+            a1: inputA1, a2: document.getElementById('a2').value,
             pais: document.getElementById('nacionalidad').value,
             nac: document.getElementById('fechaNac').value,
-            pas: inputPas, 
-            mail: document.getElementById('email').value,
-            tel: document.getElementById('tel').value, 
-            estado: "Recibido"
+            pas: inputPas, mail: document.getElementById('email').value,
+            tel: document.getElementById('tel').value, estado: "Recibido"
         };
 
         try {
-            document.getElementById('btnGuardar').innerText = "Guardando en la nube...";
-            
+            document.getElementById('btnGuardar').innerText = "Guardando...";
             if (idEditando !== null) {
-                // MODO EDICIÓN
-                const referenciaDoc = doc(db, "clientes", idEditando);
-                await updateDoc(referenciaDoc, datosCliente);
+                await updateDoc(doc(db, "clientes", idEditando), datosCliente);
                 window.cancelarEdicion();
-                alert("Información actualizada exitosamente en la nube.");
             } else {
-                // MODO CREACIÓN
                 await addDoc(collection(db, "clientes"), datosCliente);
             }
-            
             limpiarFormulario();
         } catch (error) {
-            console.error("Error al guardar: ", error);
-            alert("Hubo un error al guardar. Revisa que tu base de datos Firebase esté en Modo de Prueba.");
+            alert("Error al guardar en la nube.");
         } finally {
             document.getElementById('btnGuardar').innerText = idEditando !== null ? "Actualizar Información" : "Guardar y Registrar";
         }
@@ -178,22 +211,16 @@
         const c = clientes.find(item => item.id === id);
         if(!c) return;
 
-        document.getElementById('n1').value = c.n1;
-        document.getElementById('n2').value = c.n2;
-        document.getElementById('a1').value = c.a1;
-        document.getElementById('a2').value = c.a2;
-        document.getElementById('nacionalidad').value = c.pais;
-        document.getElementById('fechaNac').value = c.nac;
-        document.getElementById('pasaporte').value = c.pas;
-        document.getElementById('email').value = c.mail;
+        document.getElementById('n1').value = c.n1; document.getElementById('n2').value = c.n2;
+        document.getElementById('a1').value = c.a1; document.getElementById('a2').value = c.a2;
+        document.getElementById('nacionalidad').value = c.pais; document.getElementById('fechaNac').value = c.nac;
+        document.getElementById('pasaporte').value = c.pas; document.getElementById('email').value = c.mail;
         document.getElementById('tel').value = c.tel;
 
         idEditando = id;
         document.getElementById('tituloFormulario').innerText = "✏️ Editando Cliente: " + c.n1;
-        const btnGuardar = document.getElementById('btnGuardar');
-        btnGuardar.innerText = "Actualizar Información";
-        btnGuardar.style.background = "#ff9800"; 
-        
+        document.getElementById('btnGuardar').innerText = "Actualizar Información";
+        document.getElementById('btnGuardar').style.background = "#ff9800"; 
         document.getElementById('btnCancelarEdicion').classList.remove('ocultar');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -202,9 +229,8 @@
         idEditando = null;
         limpiarFormulario();
         document.getElementById('tituloFormulario').innerText = "1. Registro de Cliente";
-        const btnGuardar = document.getElementById('btnGuardar');
-        btnGuardar.innerText = "Guardar y Registrar";
-        btnGuardar.style.background = "#1a73e8";
+        document.getElementById('btnGuardar').innerText = "Guardar y Registrar";
+        document.getElementById('btnGuardar').style.background = "#1a73e8";
         document.getElementById('btnCancelarEdicion').classList.add('ocultar');
     };
 
@@ -242,7 +268,6 @@
             <div class="info-card"><strong>Correo</strong>${c.mail || 'No registrado'}</div>
             <div class="info-card"><strong>Teléfono</strong>${c.tel || 'No registrado'}</div>
             <div class="info-card" style="background:#e3f2fd; border-radius:4px;"><strong>Estado Actual</strong>${c.estado}</div>
-            <div class="info-card"><strong>ID en Nube</strong><span style="font-size:0.6rem;">${c.id}</span></div>
         `;
     };
 
@@ -264,8 +289,7 @@
     window.descargarPDF = function() {
         const elemento = document.getElementById('zonaImpresion');
         const opciones = {
-            margin: 0.5,
-            filename: `Ficha_Tecnica_${nombreArchivoActual}.pdf`,
+            margin: 0.5, filename: `Ficha_Tecnica_${nombreArchivoActual}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
